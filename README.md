@@ -27,6 +27,8 @@ An honest reading of that last row: Olist's estimator is a **promise date, not a
 
 The most relevant features (SHAP, top 5 carrying 83% of mean |SHAP|): whether the order stays **within the same state**, the **distance in km between buyer and seller**, the **freight value**, the **chargeable weight** and the **price**.
 
+**The result survives a deployment-faithful temporal evaluation** (train on the past, test on the future; see below): forward MAE is 4.85 ± 1.15 days across expanding-window periods, and 3.82 on the most recent three-month window.
+
 All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts/baseline_check.py), which replicates the notebook's exact split and pipeline (its linear-regression CV matches the notebook's stored 4.824247 ± 0.034458 to six decimals).
 
 ## 🔬 Methodology
@@ -63,7 +65,69 @@ All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts
 
 How to read the uncertainty: XGBoost's MAE lead over Random Forest (0.22 days) is roughly 6 times the fold-to-fold std (0.033-0.038 days for every model where it was persisted), so the ranking is stable. The differences within the linear family (4.824 vs 4.823) sit far inside fold noise: those are ties. Random Forest wins RMSE, but **XGBoost** was selected by MAE, the metric declared before the comparison. The model was then interpreted through feature importance and per-feature performance analysis (SHAP). *n/r: fold std not persisted by the original search run; `scripts/baseline_check.py` can recompute it.*
 
+### 3. Temporal evaluation ([`Part3_Temporal_Evaluation.ipynb`](Part3_Temporal_Evaluation.ipynb))
+
+The Part 2 protocol splits randomly, letting the model "see the future" of the period it is tested on. Part 3 re-evaluates the selected model under a deployment-faithful protocol: train only on orders **purchased and delivered** before a cutoff (2018-05-26, the 80% quantile), test on everything after, plus an expanding-window `TimeSeriesSplit` CV.
+
+| Model | Random test MAE | Temporal test MAE | Expanding-window MAE (5 folds) |
+|---|---|---|---|
+| Olist estimator (benchmark) | 12.63 | 13.49 | — |
+| Constant (train median) | 5.60 | 4.34 | — |
+| Linear Regression | 4.82 | 4.88 | 5.08 ± 0.90 |
+| **XGBoost (best params)** | **4.38** | **3.82** | **4.85 ± 1.15** |
+
+The two findings: **the headline is not inflated by the random split** (the final window is actually easier: deliveries in mid-2018 are faster and less dispersed, which is why even the constant median improves there), but **random-split CV hides the real uncertainty structure**: forward error varies by period from 3.7 to 6.7 days (fold std ≈ 1.1), roughly 30 times the ± 0.03 fold noise random CV reports. The honest deployment claim is forward MAE ≈ 4.8 ± 1.1 days across periods, not 4.43 ± 0.03.
+
 ### Evaluation notes
 
 - **Leakage discipline:** `review_score` exists in the dataset but is deliberately excluded from the features: reviews are written after delivery, so including it would leak the outcome into the prediction.
-- *
+- **Sellers repeat across train and test:** part of the performance may reflect seller-specific dispatch patterns rather than generalizable structure. A seller-grouped evaluation is planned.
+
+## 📁 Repository structure
+
+| Folder/File | Description |
+|---|---|
+| `Part1_Olist_Exploratory_Analysis.ipynb` | EDA, cleaning, table joins and feature engineering. |
+| `Part2_Olist_Machine_Learning.ipynb` | Pipelines, training, model comparison and selection. |
+| `Part3_Temporal_Evaluation.ipynb` | Train-on-past / test-on-future evaluation vs the random split. |
+| `bbdd_limpia/` | Datatype schema of the final dataset. The CSV (`dataset_final_agrupado.csv`) is not versioned: `Part1` regenerates it from the raw data. |
+| `Brasil_*.png` | Maps of customers, sellers and routes. |
+| `scripts/baseline_check.py` | Reproduces the split and computes the baseline/uncertainty numbers quoted above. |
+| `requirements.txt` | Dependencies (Python 3.11). |
+
+## ⚙️ Installation and reproduction
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/alemezio/Olist_Ecommerce_Brazil_project.git
+   cd Olist_Ecommerce_Brazil_project
+   ```
+
+2. Install dependencies (Python 3.11):
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the notebooks in order:
+
+   - `Part1_Olist_Exploratory_Analysis.ipynb`: Downloads the raw data via `kagglehub` and generates the clean dataset.
+   - `Part2_Olist_Machine_Learning.ipynb`: Trains and evaluates the models from `bbdd_limpia/dataset_final_agrupado.csv`.
+
+## 🔮 Future work
+
+- **Incorporate reviews:** analyze the relation between ratings and delivery times to build a seller "score".
+- **Narrow the temporal range:** train only with 2018 data, when the sales volume was higher and more stable.
+
+## 📄 Data and licenses
+
+The data comes from the [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle), published by Olist under the **CC BY-NC-SA 4.0** license: ~100k real, anonymized orders (2016-2018). Derived datasets keep that license. The code in this repository is distributed under the [MIT](LICENSE) license.
+
+## 📬 Contact
+
+Questions or suggestions:
+
+- 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-mezio/)
+- 📧 [alejandro.mezio@gmail.com](mailto:alejandro.mezio@gmail.com)
+- 🐙 [GitHub](https://github.com/alemezio)

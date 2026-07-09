@@ -1,0 +1,82 @@
+{
+  "cutoff": "2018-05-26 09:53:39",
+  "n_train_temporal": 70294,
+  "n_test_temporal": 18028,
+  "dropped_undelivered": 1815,
+  "results": [
+    {
+      "model": "olist_estimator",
+      "protocol": "random",
+      "MAE": 12.628189483026404,
+      "RMSE": 14.534563978093102
+    },
+    {
+      "model": "median",
+      "protocol": "random",
+      "MAE": 5.603450188595518,
+      "RMSE": 8.634618354316242
+    },
+    {
+      "model": "linreg",
+      "protocol": "random",
+      "MAE": 4.8225744526640355,
+      "RMSE": 7.160769645423351
+    },
+    {
+      "model": "xgb",
+      "protocol": "random",
+      "MAE": 4.383432865142822,
+      "RMSE": 7.132490158081055
+    },
+    {
+      "model": "olist_estimator",
+      "protocol": "temporal",
+      "MAE": 13.494286665187486,
+      "RMSE": 16.214204657037797
+    },
+    {
+      "model": "median",
+      "protocol": "temporal",
+      "MAE": 4.336088307077879,
+      "RMSE": 5.702098103924215
+    },
+    {
+      "model": "linreg",
+      "protocol": "temporal",
+      "MAE": 4.883106166575869,
+      "RMSE": 6.105610798839713
+    },
+    {
+      "model": "xgb",
+      "protocol": "temporal",
+      "MAE": 3.823610782623291,
+      "RMSE": 5.190423011779785
+    }
+  ],
+  "tscv": [
+    {
+      "model": "linreg",
+      "MAE mean": 5.083372096067533,
+      "MAE std": 0.8984226889401291,
+      "folds": [
+        3.782,
+        5.544,
+        6.457,
+        4.59,
+        5.044
+      ]
+    },
+    {
+      "model": "xgb",
+      "MAE mean": 4.8470221042633055,
+      "MAE std": 1.148509935102107,
+      "folds": [
+        3.713,
+        5.719,
+        6.669,
+        4.14,
+        3.993
+      ]
+    }
+  ]
+}
