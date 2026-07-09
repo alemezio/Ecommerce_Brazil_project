@@ -12,15 +12,22 @@ Originated as the **final project** of the *Postgraduate Diploma in Data Science
 
 ## 🏆 Headline result
 
-The selected model (**XGBoost**) reduces the average estimation error from **12.6 to 4.4 days** on the test set:
+**XGBoost predicts the actual delivery days with an MAE of 4.43 days in 5-fold cross-validation (4.38 on the held-out test set): a 22% error reduction over the strongest trivial baseline and 9% over linear regression.**
+
+Test-set comparison:
 
 | Model | MAE (days) | RMSE (days) |
 |---|---|---|
-| **XGBoost (our model)** | **4.38** | **7.13** |
-| Linear Regression (baseline) | 4.82 | 7.16 |
-| Olist's original estimator | 12.63 | 14.53 |
+| **XGBoost (selected model)** | **4.38** | **7.13** |
+| Linear Regression (scientific baseline) | 4.82 | 7.16 |
+| Constant prediction (train median, 9 days) | 5.60 | 8.63 |
+| Olist's original estimator (business benchmark) | 12.63 | 14.53 |
 
-The most relevant features for the prediction turned out to be the **distance in km between buyer and seller**, whether the order stays **within the same state**, the **freight value** and the **buyer-seller route**.
+An honest reading of that last row: Olist's estimator is a **promise date, not a prediction**. It overshoots actual deliveries by **+11.5 days on average**, and 93% of orders arrive on or before it, so most of its 12.6-day MAE is deliberate bias rather than inability to predict. Beating it confirms the model is useful to the business; the modelling contribution itself is measured against the constant and linear baselines above.
+
+The most relevant features (SHAP, top 5 carrying 83% of mean |SHAP|): whether the order stays **within the same state**, the **distance in km between buyer and seller**, the **freight value**, the **chargeable weight** and the **price**.
+
+All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts/baseline_check.py), which replicates the notebook's exact split and pipeline (its linear-regression CV matches the notebook's stored 4.824247 ± 0.034458 to six decimals).
 
 ## 🔬 Methodology
 
@@ -39,64 +46,24 @@ The most relevant features for the prediction turned out to be the **distance in
 
 ### 2. Modelling ([`Part2_Olist_Machine_Learning.ipynb`](Part2_Olist_Machine_Learning.ipynb))
 
-**9 regression models** were trained and compared using scikit-learn pipelines, cross-validation and hyperparameter search (Grid/Randomized Search). Validation results:
+**9 regression models** were trained and compared using scikit-learn pipelines, cross-validation and hyperparameter search (Grid/Randomized Search). Validation results (5-fold CV on the training set, best configuration per model):
 
-| Model | MAE (CV) | RMSE (CV) |
+| Model | MAE (CV) ± fold std | RMSE (CV) |
 |---|---|---|
-| Linear Regression (base) | 4.824 | 7.148 |
-| Lasso (L1) | 4.824 | 7.149 |
-| Ridge (L2) | 4.823 | 7.149 |
-| Ridge + polynomials (degree 2) | 4.781 | 7.117 |
-| Decision Tree | 4.756 | 7.106 |
-| Random Forest | 4.650 | **6.985** |
-| **XGBoost** | **4.428** | 7.152 |
-| SVM Regressor (LinearSVR) | 4.633 | 7.344 |
-| SGD Regressor | 4.633 | 7.344 |
+| Constant baseline (fold-train median) | 5.635 ± 0.070 | 8.645 |
+| Linear Regression (base) | 4.824 ± 0.034 | 7.148 |
+| Lasso (L1) | 4.824 ± 0.035 | 7.149 |
+| Ridge (L2) | 4.823 ± 0.035 | 7.149 |
+| Ridge + polynomials (degree 2) | 4.781 ± 0.033 | 7.117 |
+| Decision Tree | 4.756 ± 0.038 | 7.106 |
+| Random Forest | 4.650 ± 0.034 | **6.985** |
+| **XGBoost** | **4.428** ± n/r | 7.152 |
+| SVM Regressor (LinearSVR) | 4.633 ± n/r | 7.344 |
+| SGD Regressor | 4.633 ± n/r | 7.344 |
 
-**XGBoost** was selected for its lowest MAE, and the model was interpreted through feature importance and per-feature performance analysis (SHAP).
+How to read the uncertainty: XGBoost's MAE lead over Random Forest (0.22 days) is roughly 6 times the fold-to-fold std (0.033-0.038 days for every model where it was persisted), so the ranking is stable. The differences within the linear family (4.824 vs 4.823) sit far inside fold noise: those are ties. Random Forest wins RMSE, but **XGBoost** was selected by MAE, the metric declared before the comparison. The model was then interpreted through feature importance and per-feature performance analysis (SHAP). *n/r: fold std not persisted by the original search run; `scripts/baseline_check.py` can recompute it.*
 
-## 📁 Repository structure
+### Evaluation notes
 
-| Folder/File | Description |
-|---|---|
-| `Part1_Olist_Exploratory_Analysis.ipynb` | EDA, cleaning, table joins and feature engineering. |
-| `Part2_Olist_Machine_Learning.ipynb` | Pipelines, training, model comparison and selection. |
-| `bbdd_limpia/` | Datatype schema of the final dataset. The CSV (`dataset_final_agrupado.csv`) is not versioned: `Part1` regenerates it from the raw data. |
-| `Brasil_*.png` | Maps of customers, sellers and routes. |
-| `requirements.txt` | Dependencies (Python 3.11). |
-
-## ⚙️ Installation and reproduction
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/alemezio/Olist_Ecommerce_Brazil_project.git
-   cd Olist_Ecommerce_Brazil_project
-   ```
-
-2. Install dependencies (Python 3.11):
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run the notebooks in order:
-
-   - `Part1_Olist_Exploratory_Analysis.ipynb`: Downloads the raw data via `kagglehub` and generates the clean dataset.
-   - `Part2_Olist_Machine_Learning.ipynb`: Trains and evaluates the models from `bbdd_limpia/dataset_final_agrupado.csv`.
-
-## 🔮 Future work
-
-- **Incorporate reviews:** analyze the relation between ratings and delivery times to build a seller "score".
-- **Narrow the temporal range:** train only with 2018 data, when the sales volume was higher and more stable.
-
-## 📄 Data and licenses
-
-The data comes from the [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle), published by Olist under the **CC BY-NC-SA 4.0** license: ~100k real, anonymized orders (2016-2018). Derived datasets keep that license. The code in this repository is distributed under the [MIT](LICENSE) license.
-
-## 📬 Contact
-
-Questions or suggestions:
-
-- 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-mezio/)
-- 📧 [alejand
+- **Leakage discipline:** `review_score` exists in the dataset but is deliberately excluded from the features: reviews are written after delivery, so including it would leak the outcome into the prediction.
+- *
