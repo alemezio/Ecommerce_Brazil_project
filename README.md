@@ -1,95 +1,102 @@
-# 📦 Predicción de días de entrega en e-commerce. Dataset Olist (Brasil)
+# 📦 Predicting e-commerce delivery times. Olist dataset (Brazil)
 
-**Proyecto final** de la *Diplomatura en Ciencia de Datos, IA y sus Aplicaciones en Economía y Negocios*, Universidad Nacional de Córdoba ([diplocienciadedatos.com.ar](https://diplocienciadedatos.com.ar)) · Grupo 8 · 2025
+Originated as the **final project** of the *Postgraduate Diploma in Data Science, AI and their Applications in Economics and Business*, Universidad Nacional de Córdoba ([diplocienciadedatos.com.ar](https://diplocienciadedatos.com.ar)) · 2025. This repository evolves independently from that course submission.
 
-## 🎯 El problema
+**Author:** Alejandro Mezio
 
-[Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) es el marketplace más grande de Brasil. Su estimador de fecha de entrega es muy impreciso: se equivoca en promedio **más de 12 días**. Una estimación pobre afecta la experiencia de compra y las reviews de los vendedores.
+## 🎯 The problem
 
-**Objetivo:** construir un modelo de Machine Learning que prediga los días reales de entrega de una orden con mayor precisión que el estimador original de Olist.
+[Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) is the largest marketplace in Brazil. Its delivery date estimator is very imprecise: it misses by **more than 12 days** on average. A poor estimate hurts the buying experience and the sellers' reviews.
 
-## 🏆 Resultado principal
+**Goal:** build a Machine Learning model that predicts the actual delivery days of an order more precisely than Olist's original estimator.
 
-El modelo seleccionado (**XGBoost**) reduce el error promedio de estimación de **12.6 a 4.4 días** sobre el conjunto de test:
+## 🏆 Headline result
 
-| Modelo | MAE (días) | RMSE (días) |
+The selected model (**XGBoost**) reduces the average estimation error from **12.6 to 4.4 days** on the test set:
+
+| Model | MAE (days) | RMSE (days) |
 |---|---|---|
-| **XGBoost (nuestro modelo)** | **4.38** | **7.13** |
-| Regresión Lineal (baseline) | 4.82 | 7.16 |
-| Estimador original de Olist | 12.63 | 14.53 |
+| **XGBoost (our model)** | **4.38** | **7.13** |
+| Linear Regression (baseline) | 4.82 | 7.16 |
+| Olist's original estimator | 12.63 | 14.53 |
 
-Las variables más relevantes para la predicción resultaron ser la **distancia en km entre comprador y vendedor**, si la orden es **dentro del mismo estado**, el **valor del flete** y la **ruta comprador-vendedor**.
+The most relevant features for the prediction turned out to be the **distance in km between buyer and seller**, whether the order stays **within the same state**, the **freight value** and the **buyer-seller route**.
 
-## 🔬 Metodología
+## 🔬 Methodology
 
-### 1. Análisis Exploratorio y Limpieza ([`Parte1_Olist_Analisis_Exploratorio.ipynb`](Parte1_Olist_Analisis_Exploratorio.ipynb))
+### 1. Exploratory Analysis and Cleaning ([`Part1_Olist_Exploratory_Analysis.ipynb`](Part1_Olist_Exploratory_Analysis.ipynb))
 
-- EDA individual de las 9 tablas del dataset (~100k órdenes, ~1M registros de geolocalización): tratamiento de duplicados, nulos y outliers.
-- Unión de las tablas en un dataset único a nivel orden.
-- **Feature engineering:** peso volumétrico, distancia seller-customer (geopy), variables temporales, rutas entre estados, categorías de producto.
-- Análisis univariado, bivariado y geográfico.
+- Individual EDA of the 9 tables of the dataset (~100k orders, ~1M geolocation records): handling of duplicates, missing values and outliers.
+- Join of the tables into a single order-level dataset.
+- **Feature engineering:** volumetric weight, seller-customer distance (geopy), temporal variables, state-to-state routes, product categories.
+- Univariate, bivariate and geographic analysis.
 
-| Clientes | Vendedores | Rutas |
+| Customers | Sellers | Routes |
 |---|---|---|
-| ![Distribución de clientes en Brasil](Brasil_customers.png) | ![Distribución de vendedores en Brasil](Brasil_sellers.png) | ![Rutas comprador-vendedor](Brasil_rutas.png) |
+| ![Customer distribution in Brazil](Brasil_customers.png) | ![Seller distribution in Brazil](Brasil_sellers.png) | ![Buyer-seller routes](Brasil_rutas.png) |
 
-*La concentración de vendedores en San Pablo vs. la dispersión de clientes por todo el país explica por qué la distancia es la variable más predictiva.*
+*The concentration of sellers in São Paulo vs. the dispersion of customers across the whole country explains why distance is the most predictive variable.*
 
-### 2. Modelado ([`Parte2_Olist_Machine_Learning.ipynb`](Parte2_Olist_Machine_Learning.ipynb))
+### 2. Modelling ([`Part2_Olist_Machine_Learning.ipynb`](Part2_Olist_Machine_Learning.ipynb))
 
-Se entrenaron y compararon **9 modelos de regresión** con pipelines de scikit-learn, validación cruzada y búsqueda de hiperparámetros (Grid/Randomized Search). Resultados en validación:
+**9 regression models** were trained and compared using scikit-learn pipelines, cross-validation and hyperparameter search (Grid/Randomized Search). Validation results:
 
-| Modelo | MAE (CV) | RMSE (CV) |
+| Model | MAE (CV) | RMSE (CV) |
 |---|---|---|
-| Regresión Lineal (base) | 4.824 | 7.148 |
+| Linear Regression (base) | 4.824 | 7.148 |
 | Lasso (L1) | 4.824 | 7.149 |
 | Ridge (L2) | 4.823 | 7.149 |
-| Ridge + polinómicas (grado 2) | 4.781 | 7.117 |
+| Ridge + polynomials (degree 2) | 4.781 | 7.117 |
 | Decision Tree | 4.756 | 7.106 |
 | Random Forest | 4.650 | **6.985** |
 | **XGBoost** | **4.428** | 7.152 |
 | SVM Regressor (LinearSVR) | 4.633 | 7.344 |
 | SGD Regressor | 4.633 | 7.344 |
 
-Se seleccionó **XGBoost** por su menor MAE, y se interpretó el modelo con importancia de variables y análisis de performance por feature (SHAP).
+**XGBoost** was selected for its lowest MAE, and the model was interpreted through feature importance and per-feature performance analysis (SHAP).
 
-## 📁 Estructura del repositorio
+## 📁 Repository structure
 
-| Carpeta/Archivo | Descripción |
+| Folder/File | Description |
 |---|---|
-| `Parte1_Olist_Analisis_Exploratorio.ipynb` | EDA, limpieza, unión de tablas y feature engineering. |
-| `Parte2_Olist_Machine_Learning.ipynb` | Pipelines, entrenamiento, comparación y selección de modelos. |
-| `bbdd_limpia/` | Esquema de tipos del dataset final. El CSV (`dataset_final_agrupado.csv`) no se versiona: lo regenera `Parte1` a partir de los datos crudos. |
-| `Brasil_*.png` | Mapas de clientes, vendedores y rutas. |
-| `requirements.txt` | Dependencias (Python 3.11). |
+| `Part1_Olist_Exploratory_Analysis.ipynb` | EDA, cleaning, table joins and feature engineering. |
+| `Part2_Olist_Machine_Learning.ipynb` | Pipelines, training, model comparison and selection. |
+| `bbdd_limpia/` | Datatype schema of the final dataset. The CSV (`dataset_final_agrupado.csv`) is not versioned: `Part1` regenerates it from the raw data. |
+| `Brasil_*.png` | Maps of customers, sellers and routes. |
+| `requirements.txt` | Dependencies (Python 3.11). |
 
-## ⚙️ Instalación y reproducción
+## ⚙️ Installation and reproduction
 
-1. Clonar el repositorio:
+1. Clone the repository:
 
    ```bash
-   git clone https://github.com/alemezio/diplodatos_proyecto_final.git
-   cd diplodatos_proyecto_final
+   git clone https://github.com/alemezio/Olist_Ecommerce_Brazil_project.git
+   cd Olist_Ecommerce_Brazil_project
    ```
 
-2. Instalar dependencias (Python 3.11):
+2. Install dependencies (Python 3.11):
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Ejecutar los notebooks en orden:
+3. Run the notebooks in order:
 
-   - `Parte1_Olist_Analisis_Exploratorio.ipynb`: Descarga los datos crudos vía `kagglehub` y genera el dataset limpio.
-   - `Parte2_Olist_Machine_Learning.ipynb`: Entrena y evalúa los modelos a partir de `bbdd_limpia/dataset_final_agrupado.csv`.
+   - `Part1_Olist_Exploratory_Analysis.ipynb`: Downloads the raw data via `kagglehub` and generates the clean dataset.
+   - `Part2_Olist_Machine_Learning.ipynb`: Trains and evaluates the models from `bbdd_limpia/dataset_final_agrupado.csv`.
 
-## 🔮 Trabajo futuro
+## 🔮 Future work
 
-- **Incorporar reviews:** analizar la relación entre calificaciones y tiempos de entrega para construir un "score" de vendedor.
-- **Acotar el rango temporal:** entrenar solo con datos de 2018, donde el volumen de ventas era mayor y más estable.
+- **Incorporate reviews:** analyze the relation between ratings and delivery times to build a seller "score".
+- **Narrow the temporal range:** train only with 2018 data, when the sales volume was higher and more stable.
 
-## 📄 Datos y licencias
+## 📄 Data and licenses
 
-Los datos provienen del [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle), publicado por Olist bajo licencia **CC BY-NC-SA 4.0**: ~100k órdenes reales (2016-2018), anonimizadas. Los datasets derivados conservan esa licencia. El código de este repositorio se distribuye bajo licencia [MIT](LICENSE).
+The data comes from the [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle), published by Olist under the **CC BY-NC-SA 4.0** license: ~100k real, anonymized orders (2016-2018). Derived datasets keep that license. The code in this repository is distributed under the [MIT](LICENSE) license.
 
-Este proyecto naci
+## 📬 Contact
+
+Questions or suggestions:
+
+- 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-mezio/)
+- 📧 [alejand
