@@ -59,11 +59,9 @@ Se seleccionó **XGBoost** por su menor MAE, y se interpretó el modelo con impo
 |---|---|
 | `Parte1_Olist_Analisis_Exploratorio.ipynb` | EDA, limpieza, unión de tablas y feature engineering. |
 | `Parte2_Olist_Machine_Learning.ipynb` | Pipelines, entrenamiento, comparación y selección de modelos. |
-| `bbdd/` | Esquema de la base de datos original. |
-| `bbdd_limpia/` | Dataset final limpio y agrupado (`dataset_final_agrupado.csv`). |
-| `Informe Grupo 8 - Olist.pdf` | Informe final con metodología y resultados. |
-| `Presentación Grupo 8.pdf` | Slides de la presentación oral. |
+| `bbdd_limpia/` | Esquema de tipos del dataset final. El CSV (`dataset_final_agrupado.csv`) no se versiona: lo regenera `Parte1` a partir de los datos crudos. |
 | `Brasil_*.png` | Mapas de clientes, vendedores y rutas. |
+| `requirements.txt` | Dependencias (Python 3.11). |
 
 ## ⚙️ Instalación y reproducción
 
@@ -74,11 +72,10 @@ Se seleccionó **XGBoost** por su menor MAE, y se interpretó el modelo con impo
    cd diplodatos_proyecto_final
    ```
 
-2. Instalar dependencias (Python 3.10+):
+2. Instalar dependencias (Python 3.11):
 
    ```bash
-   pip install pandas numpy scipy matplotlib seaborn scikit-learn xgboost shap \
-               kagglehub folium geopy fuzzywuzzy unidecode ydata-profiling
+   pip install -r requirements.txt
    ```
 
 3. Ejecutar los notebooks en orden:
@@ -91,10 +88,8 @@ Se seleccionó **XGBoost** por su menor MAE, y se interpretó el modelo con impo
 - **Incorporar reviews:** analizar la relación entre calificaciones y tiempos de entrega para construir un "score" de vendedor.
 - **Acotar el rango temporal:** entrenar solo con datos de 2018, donde el volumen de ventas era mayor y más estable.
 
-## 📬 Contacto
+## 📄 Datos y licencias
 
-Preguntas o sugerencias:
+Los datos provienen del [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Kaggle), publicado por Olist bajo licencia **CC BY-NC-SA 4.0**: ~100k órdenes reales (2016-2018), anonimizadas. Los datasets derivados conservan esa licencia. El código de este repositorio se distribuye bajo licencia [MIT](LICENSE).
 
-- 💼 [LinkedIn](https://www.linkedin.com/in/alejandro-mezio/)
-- 📧 [alejandro.mezio@gmail.com](mailto:alejandro.mezio@gmail.com)
-- 🐙 [GitHub](https://github.com/alemezio)
+Este proyecto naci

@@ -1,0 +1,19 @@
+# Python 3.11 (notebooks executed with 3.11.9).
+# Lower bounds reflect API requirements observed in the notebooks
+# (e.g. sklearn.metrics.root_mean_squared_error needs scikit-learn >= 1.4).
+# Exact pins from the original environment can replace these if reproduced.
+
+pandas>=2.0
+numpy>=1.24
+scipy>=1.10
+scikit-learn>=1.4
+xgboost>=2.0
+shap>=0.44
+matplotlib>=3.7
+seaborn>=0.12
+geopy>=2.3
+folium>=0.14
+kagglehub>=0.2
+fuzzywuzzy>=0.18
+unidecode>=1.3
+ydata-profiling>=4.6   # optional: only for the profiling section of Parte1
