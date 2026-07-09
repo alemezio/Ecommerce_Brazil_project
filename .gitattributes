@@ -1,0 +1,6 @@
+# Normalize line endings: everything git stores uses LF,
+# preventing whole-file CRLF diffs on Windows checkouts.
+* text=auto eol=lf
+*.png binary
+*.pdf binary
+*.pkl binary
