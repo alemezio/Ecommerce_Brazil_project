@@ -40,17 +40,18 @@ CATEGORICAL = ["product_venta", "rutas"]
 TARGETS = ["days_to_delivered", "days_estimated"]
 
 # Best hyperparameters printed by the notebook's RandomizedSearchCV (cell
-# "Best ..." under section 6. XGBoost).
+# "Best ..." under section 6. XGBoost; search re-run 2026-07-10,
+# best MAE (CV) = 4.4317).
 XGB_BEST = dict(
-    colsample_bytree=0.9473671498667567,
-    gamma=0.7176274029426006,
-    learning_rate=0.040574811555119,
+    colsample_bytree=0.9658043617192876,
+    gamma=0.6323703148318477,
+    learning_rate=0.039226743328387936,
     max_depth=7,
-    min_child_weight=15,
-    n_estimators=1148,
-    reg_alpha=1.2281606958567808,
-    reg_lambda=2.047745290252175,
-    subsample=0.9080820523663289,
+    min_child_weight=11,
+    n_estimators=1012,
+    reg_alpha=1.7445653986952265,
+    reg_lambda=2.3230080444539265,
+    subsample=0.977362924345745,
 )
 
 
