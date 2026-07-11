@@ -90,7 +90,7 @@ The two findings: **the headline is not inflated by the random split** (the fina
 | `Part1_Olist_Exploratory_Analysis.ipynb` | EDA, cleaning, table joins and feature engineering. |
 | `Part2_Olist_Machine_Learning.ipynb` | Pipelines, training, model comparison and selection. |
 | `Part3_Temporal_Evaluation.ipynb` | Train-on-past / test-on-future evaluation vs the random split. |
-| `bbdd_limpia/` | Datatype schema of the final dataset. The CSV (`dataset_final_agrupado.csv`) is not versioned: `Part1` regenerates it from the raw data. |
+| `data/processed/` | Datatype schemas of the cleaned datasets. The CSVs (final dataset: `orders_final.csv`) are not versioned: `Part1` regenerates them from the raw data. |
 | `Brasil_*.png` | Maps of customers, sellers and routes. |
 | `scripts/baseline_check.py` | Reproduces the split and computes the baseline/uncertainty numbers quoted above. |
 | `requirements.txt` | Dependencies (Python 3.11). |
@@ -113,7 +113,8 @@ The two findings: **the headline is not inflated by the random split** (the fina
 3. Run the notebooks in order:
 
    - `Part1_Olist_Exploratory_Analysis.ipynb`: Downloads the raw data via `kagglehub` and generates the clean dataset.
-   - `Part2_Olist_Machine_Learning.ipynb`: Trains and evaluates the models from `bbdd_limpia/dataset_final_agrupado.csv`.
+   - `Part2_Olist_Machine_Learning.ipynb`: Trains and evaluates the models from `data/processed/orders_final.csv`.
+   - `Part3_Temporal_Evaluation.ipynb`: Runs the temporal and seller-grouped evaluations on the same dataset.
 
 ## 🔮 Future work
 

@@ -34,9 +34,9 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 ROOT = Path(__file__).resolve().parent.parent
 
-NUMERICAL = ["price", "freight_value", "product_chosen_weight", "distance_km",
+NUMERICAL = ["price", "freight_value", "product_chargeable_weight", "distance_km",
              "sales_same_state"]
-CATEGORICAL = ["product_venta", "rutas"]
+CATEGORICAL = ["product_sales_volume", "route"]
 TARGETS = ["days_to_delivered", "days_estimated"]
 
 # Best hyperparameters printed by the notebook's RandomizedSearchCV (cell
@@ -57,11 +57,11 @@ XGB_BEST = dict(
 
 def load_data():
     dtypes = json.loads(
-        (ROOT / "bbdd_limpia/dataset_final_agrupado_datatypes.txt").read_text())
+        (ROOT / "data/processed/orders_final_datatypes.txt").read_text())
     datetime_cols = [c for c, t in dtypes.items() if t == "datetime64[ns]"]
     for c in datetime_cols:
         del dtypes[c]
-    df = pd.read_csv(ROOT / "bbdd_limpia/dataset_final_agrupado.csv",
+    df = pd.read_csv(ROOT / "data/processed/orders_final.csv",
                      dtype=dtypes, parse_dates=datetime_cols)
     X = df[NUMERICAL + CATEGORICAL]
     y = df[TARGETS]
