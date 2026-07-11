@@ -81,7 +81,7 @@ The two findings: **the headline is not inflated by the random split** (the fina
 ### Evaluation notes
 
 - **Leakage discipline:** `review_score` exists in the dataset but is deliberately excluded from the features: reviews are written after delivery, so including it would leak the outcome into the prediction.
-- **Sellers repeat across train and test:** part of the performance may reflect seller-specific dispatch patterns rather than generalizable structure. A seller-grouped evaluation is planned.
+- **Seller memorization, quantified** (Part 3, section 14): with validation sellers excluded from training (`GroupKFold` on `seller_id`), XGBoost's MAE degrades from 4.41 ± 0.04 to 4.54 ± 0.07 (a bounded 2.9%), while linear regression, lacking the capacity to memorize seller fingerprints, shows no gap (4.82 vs 4.83). The XGBoost-over-linear ranking survives; the 0.13-day gap is the upper bound on the seller-memorization component of the headline.
 
 ## 📁 Repository structure
 
