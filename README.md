@@ -33,6 +33,8 @@ All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts
 
 ## 🔬 Methodology
 
+> **Note:** GitHub's preview may not render the larger notebooks. Use nbviewer instead: [Part 1](https://nbviewer.org/github/alemezio/Olist_Ecommerce_Brazil_project/blob/main/Part1_Olist_Exploratory_Analysis.ipynb) · [Part 2](https://nbviewer.org/github/alemezio/Olist_Ecommerce_Brazil_project/blob/main/Part2_Olist_Machine_Learning.ipynb) · [Part 3](https://nbviewer.org/github/alemezio/Olist_Ecommerce_Brazil_project/blob/main/Part3_Temporal_Evaluation.ipynb)
+
 ### 1. Exploratory Analysis and Cleaning ([`Part1_Olist_Exploratory_Analysis.ipynb`](Part1_Olist_Exploratory_Analysis.ipynb))
 
 - Individual EDA of the 9 tables of the dataset (~100k orders, ~1M geolocation records): handling of duplicates, missing values and outliers.
@@ -89,8 +91,12 @@ The two findings: **the headline is not inflated by the random split** (the fina
 |---|---|
 | `Part1_Olist_Exploratory_Analysis.ipynb` | EDA, cleaning, table joins and feature engineering. |
 | `Part2_Olist_Machine_Learning.ipynb` | Pipelines, training, model comparison and selection. |
-| `Part3_Temporal_Evaluation.ipynb` | Train-on-past / test-on-future evaluation vs the random split. |
+| `Part3_Temporal_Evaluation.ipynb` | Temporal (train-on-past) and seller-grouped evaluations. |
+| `src/olist_delivery/` | The pipeline as a package: single source of truth plus `train` and `predict` CLIs. |
+| `tests/` | Smoke tests pinning `src/` to the notebook checkpoints; they run on the committed sample. |
+| `data/sample/` | Committed 2000-row sample so tests run on a fresh clone. |
 | `data/processed/` | Datatype schemas of the cleaned datasets. The CSVs (final dataset: `orders_final.csv`) are not versioned: `Part1` regenerates them from the raw data. |
+| `models/` | Trained model artifacts (not versioned) and their metrics JSON (versioned). |
 | `Brasil_*.png` | Maps of customers, sellers and routes. |
 | `scripts/baseline_check.py` | Reproduces the split and computes the baseline/uncertainty numbers quoted above. |
 | `requirements.txt` | Dependencies (Python 3.11). |
@@ -115,6 +121,28 @@ The two findings: **the headline is not inflated by the random split** (the fina
    - `Part1_Olist_Exploratory_Analysis.ipynb`: Downloads the raw data via `kagglehub` and generates the clean dataset.
    - `Part2_Olist_Machine_Learning.ipynb`: Trains and evaluates the models from `data/processed/orders_final.csv`.
    - `Part3_Temporal_Evaluation.ipynb`: Runs the temporal and seller-grouped evaluations on the same dataset.
+
+4. Run the tests (works on a fresh clone; checkpoint tests activate once the data and model exist):
+
+   ```bash
+   python -m pytest tests/ -q
+   ```
+
+## 🚀 Using the model
+
+Train the selected configuration and persist the artifact (requires the dataset from step 3; expected test MAE 4.38):
+
+```bash
+python -m src.olist_delivery.train
+```
+
+Predict delivery days for new orders (a CSV with the seven feature columns; try it on the committed sample):
+
+```bash
+python -m src.olist_delivery.predict data/sample/orders_sample.csv
+```
+
+The predict CLI validates the input columns and warns explicitly when categorical values were never seen in training.
 
 ## 🔮 Future work
 
