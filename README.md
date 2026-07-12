@@ -33,7 +33,7 @@ All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts
 
 ## 🔬 Methodology
 
-> **Note:** GitHub's preview may not render the larger notebooks. Use nbviewer instead: [Part 1](https://nbviewer.org/github/alemezio/Olist_Ecommerce_Brazil_project/blob/main/Part1_Olist_Exploratory_Analysis.ipynb) · [Part 2](https://nbviewer.org/github/alemezio/Olist_Ecommerce_Brazil_project/blob/main/Part2_Olist_Machine_Learning.ipynb) · [Part 3](https://nbviewer.org/github/alemezio/Olist_Ecommerce_Brazil_project/blob/main/Part3_Temporal_Evaluation.ipynb)
+> **Note:** GitHub's preview may not render the larger notebooks. Use nbviewer instead: [Part 1](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part1_Olist_Exploratory_Analysis.ipynb) · [Part 2](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part2_Olist_Machine_Learning.ipynb) · [Part 3](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part3_Temporal_Evaluation.ipynb)
 
 ### 1. Exploratory Analysis and Cleaning ([`Part1_Olist_Exploratory_Analysis.ipynb`](Part1_Olist_Exploratory_Analysis.ipynb))
 
@@ -78,7 +78,7 @@ The Part 2 protocol splits randomly, letting the model "see the future" of the p
 | Linear Regression | 4.82 | 4.88 | 5.08 ± 0.90 |
 | **XGBoost (best params)** | **4.38** | **3.82** | **4.84 ± 1.16** |
 
-The two findings: **the headline is not inflated by the random split** (the final window is actually easier: deliveries in mid-2018 are faster and less dispersed, which is why even the constant median improves there), but **random-split CV hides the real uncertainty structure**: forward error varies by period from 3.7 to 6.7 days (fold std ≈ 1.1), roughly 30 times the ± 0.03 fold noise random CV reports. The honest deployment claim is forward MAE ≈ 4.8 ± 1.1 days across periods, not 4.43 ± 0.03.
+The two findings: **the headline is not inflated by the random split** (the final window is actually easier: deliveries in mid-2018 are faster and less dispersed, which is why even the constant median improves there), but **random-split CV hides the real uncertainty structure**: forward error varies by period from 3.7 to 6.7 days (fold std ≈ 1.2), roughly 25 times the ± 0.045 fold noise random CV reports. The honest deployment claim is forward MAE ≈ 4.8 ± 1.2 days across periods, not 4.43 ± 0.05.
 
 ### Evaluation notes
 
@@ -106,8 +106,8 @@ The two findings: **the headline is not inflated by the random split** (the fina
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/alemezio/Olist_Ecommerce_Brazil_project.git
-   cd Olist_Ecommerce_Brazil_project
+   git clone https://github.com/alemezio/Ecommerce_Brazil_project.git
+   cd Ecommerce_Brazil_project
    ```
 
 2. Install dependencies (Python 3.11):
