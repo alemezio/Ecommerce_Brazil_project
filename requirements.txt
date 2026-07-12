@@ -16,4 +16,6 @@ folium>=0.14
 kagglehub>=0.2
 fuzzywuzzy>=0.18
 unidecode>=1.3
-ydata-profiling>=4.6   # optional: only for the profiling section of Parte1
+ydata-profiling>=4.6   # optional: only for the profiling section of Part1
+pytest>=8.0            # tests/ smoke suite
+joblib>=1.3            # model persistence (bundled with scikit-learn)
