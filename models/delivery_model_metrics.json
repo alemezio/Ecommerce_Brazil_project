@@ -1,0 +1,8 @@
+{
+  "test_mae": 4.382190227508545,
+  "test_rmse": 7.13856840133667,
+  "n_train": 72109,
+  "n_test": 18028,
+  "fast_mode": false,
+  "fit_seconds": 25.7
+}

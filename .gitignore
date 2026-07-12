@@ -15,6 +15,7 @@ venv/
 
 # Saved models (regenerable)
 *.pkl
+*.joblib
 
 # OS / editor
 .DS_Store
