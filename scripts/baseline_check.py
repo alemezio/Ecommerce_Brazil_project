@@ -39,19 +39,18 @@ NUMERICAL = ["price", "freight_value", "product_chargeable_weight", "distance_km
 CATEGORICAL = ["product_sales_volume", "route"]
 TARGETS = ["days_to_delivered", "days_estimated"]
 
-# Best hyperparameters printed by the notebook's RandomizedSearchCV (cell
-# "Best ..." under section 6. XGBoost; search re-run 2026-07-10,
-# best MAE (CV) = 4.4317).
+# Best hyperparameters found by the seeded randomized search in Part 2
+# (random_state=888; best MAE (CV) = 4.4304).
 XGB_BEST = dict(
-    colsample_bytree=0.9658043617192876,
-    gamma=0.6323703148318477,
-    learning_rate=0.039226743328387936,
-    max_depth=7,
+    colsample_bytree=0.9601790561111081,
+    gamma=0.7547273470940448,
+    learning_rate=0.01220231163108703,
+    max_depth=9,
     min_child_weight=11,
-    n_estimators=1012,
-    reg_alpha=1.7445653986952265,
-    reg_lambda=2.3230080444539265,
-    subsample=0.977362924345745,
+    n_estimators=1304,
+    reg_alpha=0.0852809795651881,
+    reg_lambda=2.106841943759883,
+    subsample=0.6399331361796047,
 )
 
 

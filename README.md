@@ -12,13 +12,13 @@ Originated as the **final project** of the *Postgraduate Diploma in Data Science
 
 ## 🏆 Headline result
 
-**XGBoost predicts the actual delivery days with an MAE of 4.43 days in 5-fold cross-validation (4.39 on the held-out test set): a 22% error reduction over the strongest trivial baseline and 9% over linear regression.**
+**XGBoost predicts the actual delivery days with an MAE of 4.43 days in 5-fold cross-validation (4.38 on the held-out test set): a 22% error reduction over the strongest trivial baseline and 9% over linear regression.**
 
 Test-set comparison:
 
 | Model | MAE (days) | RMSE (days) |
 |---|---|---|
-| **XGBoost (selected model)** | **4.39** | **7.15** |
+| **XGBoost (selected model)** | **4.38** | **7.14** |
 | Linear Regression (scientific baseline) | 4.82 | 7.16 |
 | Constant prediction (train median, 9 days) | 5.60 | 8.63 |
 | Olist's original estimator (business benchmark) | 12.63 | 14.53 |
@@ -58,12 +58,12 @@ All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts
 | Ridge (L2) | 4.823 ± 0.035 | 7.149 |
 | Ridge + polynomials (degree 2) | 4.781 ± 0.033 | 7.117 |
 | Decision Tree | 4.756 ± 0.038 | 7.106 |
-| Random Forest | 4.650 ± 0.034 | **6.986** |
-| **XGBoost** | **4.432 ± 0.043** | 7.160 |
-| SVM Regressor (LinearSVR) | 4.633 ± 0.041 | 7.338 |
-| SGD Regressor | 4.633 ± 0.041 | 7.343 |
+| Random Forest | 4.649 ± 0.035 | **6.986** |
+| **XGBoost** | **4.430 ± 0.045** | 7.158 |
+| SVM Regressor (LinearSVR) | 4.633 ± 0.041 | 7.344 |
+| SGD Regressor | 4.633 ± 0.041 | 7.344 |
 
-How to read the uncertainty: XGBoost's MAE lead over Random Forest (0.22 days) is roughly 5 times its fold-to-fold std (0.043 days), so the ranking is stable. The differences within the linear family (4.824 vs 4.823) sit far inside fold noise: those are ties. Random Forest wins RMSE, but **XGBoost** was selected by MAE, the metric declared before the comparison. The model was then interpreted through feature importance and per-feature performance analysis (SHAP).
+How to read the uncertainty: XGBoost's MAE lead over Random Forest (0.22 days) is roughly 5 times its fold-to-fold std (0.045 days), so the ranking is stable. The differences within the linear family (4.824 vs 4.823) sit far inside fold noise: those are ties. Random Forest wins RMSE, but **XGBoost** was selected by MAE, the metric declared before the comparison. The model was then interpreted through feature importance and per-feature performance analysis (SHAP).
 
 ### 3. Temporal evaluation ([`Part3_Temporal_Evaluation.ipynb`](Part3_Temporal_Evaluation.ipynb))
 
