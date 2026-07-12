@@ -25,7 +25,7 @@ Test-set comparison:
 
 An honest reading of that last row: Olist's estimator is a **promise date, not a prediction**. It overshoots actual deliveries by **+11.5 days on average**, and 93% of orders arrive on or before it, so most of its 12.6-day MAE is deliberate bias rather than inability to predict. Beating it confirms the model is useful to the business; the modelling contribution itself is measured against the constant and linear baselines above.
 
-The most relevant features (SHAP, top 5 carrying 83% of mean |SHAP|): whether the order stays **within the same state**, the **distance in km between buyer and seller**, the **freight value**, the **chargeable weight** and the **price**.
+The most relevant features (SHAP importance grouped by original variable): whether the order stays **within the same state** (32%) and the **distance in km between buyer and seller** (31%) dominate, followed by the **buyer-seller route** (13%), the **freight value** (9%) and the **chargeable weight** (7%).
 
 **The result survives a deployment-faithful temporal evaluation** (train on the past, test on the future; see below): forward MAE is 4.84 ± 1.16 days across expanding-window periods, and 3.82 on the most recent three-month window.
 
@@ -74,7 +74,7 @@ The Part 2 protocol splits randomly, letting the model "see the future" of the p
 | Olist estimator (benchmark) | 12.63 | 13.49 | — |
 | Constant (train median) | 5.60 | 4.34 | — |
 | Linear Regression | 4.82 | 4.88 | 5.08 ± 0.90 |
-| **XGBoost (best params)** | **4.39** | **3.82** | **4.84 ± 1.16** |
+| **XGBoost (best params)** | **4.38** | **3.82** | **4.84 ± 1.16** |
 
 The two findings: **the headline is not inflated by the random split** (the final window is actually easier: deliveries in mid-2018 are faster and less dispersed, which is why even the constant median improves there), but **random-split CV hides the real uncertainty structure**: forward error varies by period from 3.7 to 6.7 days (fold std ≈ 1.1), roughly 30 times the ± 0.03 fold noise random CV reports. The honest deployment claim is forward MAE ≈ 4.8 ± 1.1 days across periods, not 4.43 ± 0.03.
 
