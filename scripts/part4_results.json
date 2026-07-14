@@ -1,0 +1,130 @@
+{
+  "overall_metrics_frozen": {
+    "MAE (days)": 4.38219,
+    "Median AE (days)": 2.814476,
+    "RMSE (days)": 7.138568,
+    "WAPE": 0.38456,
+    "log-MAE": 0.361197,
+    "typical ratio (exp of log-MAE)": 1.435045,
+    "RMSLE": 0.465594,
+    "MAPE (y>0 only)": 0.46504
+  },
+  "by_band_frozen": [
+    {
+      "band": "0-2",
+      "n": 892,
+      "mae": 3.013,
+      "median_ae": 2.742,
+      "typical_ratio": 2.106
+    },
+    {
+      "band": "3-5",
+      "n": 2848,
+      "mae": 2.648,
+      "median_ae": 1.906,
+      "typical_ratio": 1.471
+    },
+    {
+      "band": "6-10",
+      "n": 6538,
+      "mae": 2.603,
+      "median_ae": 2.183,
+      "typical_ratio": 1.311
+    },
+    {
+      "band": "11-20",
+      "n": 5776,
+      "mae": 3.629,
+      "median_ae": 3.086,
+      "typical_ratio": 1.311
+    },
+    {
+      "band": "21-40",
+      "n": 1747,
+      "mae": 12.862,
+      "median_ae": 12.122,
+      "typical_ratio": 1.908
+    },
+    {
+      "band": "40+",
+      "n": 227,
+      "mae": 36.65,
+      "median_ae": 33.673,
+      "typical_ratio": 3.502
+    }
+  ],
+  "log_model_compare": [
+    {
+      "band": "0-2",
+      "MAE frozen": 3.013,
+      "MAE log-model": 2.961,
+      "ratio frozen": 2.106,
+      "ratio log-model": 2.088
+    },
+    {
+      "band": "3-5",
+      "MAE frozen": 2.648,
+      "MAE log-model": 2.616,
+      "ratio frozen": 1.471,
+      "ratio log-model": 1.465
+    },
+    {
+      "band": "6-10",
+      "MAE frozen": 2.603,
+      "MAE log-model": 2.583,
+      "ratio frozen": 1.311,
+      "ratio log-model": 1.31
+    },
+    {
+      "band": "11-20",
+      "MAE frozen": 3.629,
+      "MAE log-model": 3.665,
+      "ratio frozen": 1.311,
+      "ratio log-model": 1.316
+    },
+    {
+      "band": "21-40",
+      "MAE frozen": 12.862,
+      "MAE log-model": 12.909,
+      "ratio frozen": 1.908,
+      "ratio log-model": 1.915
+    },
+    {
+      "band": "40+",
+      "MAE frozen": 36.65,
+      "MAE log-model": 36.702,
+      "ratio frozen": 3.502,
+      "ratio log-model": 3.515
+    }
+  ],
+  "log_model_overall_mae": 4.3837809554219165,
+  "promise_random": [
+    {
+      "promise": "P90 model",
+      "coverage %": 90.0,
+      "mean padding (days)": 7.63,
+      "pinball@0.9": 1.5045
+    },
+    {
+      "promise": "Platform estimator",
+      "coverage %": 93.5,
+      "mean padding (days)": 11.45,
+      "pinball@0.9": 1.7337
+    }
+  ],
+  "promise_temporal": [
+    {
+      "promise": "P90 model (temporal)",
+      "coverage %": 97.8,
+      "mean padding (days)": 11.51,
+      "pinball@0.9": 1.3008
+    },
+    {
+      "promise": "Platform estimator (temporal)",
+      "coverage %": 96.3,
+      "mean padding (days)": 13.08,
+      "pinball@0.9": 1.5158
+    }
+  ],
+  "cutoff": "2018-05-26 09:53:39"
+}
