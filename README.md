@@ -33,7 +33,7 @@ All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts
 
 ## 🔬 Methodology
 
-> **Note:** GitHub's preview may not render the larger notebooks. Use nbviewer instead: [Part 1](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part1_Olist_Exploratory_Analysis.ipynb) · [Part 2](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part2_Olist_Machine_Learning.ipynb) · [Part 3](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part3_Temporal_Evaluation.ipynb)
+> **Note:** GitHub's preview may not render the larger notebooks. Use nbviewer instead: [Part 1](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part1_Olist_Exploratory_Analysis.ipynb) · [Part 2](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part2_Olist_Machine_Learning.ipynb) · [Part 3](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part3_Temporal_Evaluation.ipynb) · [Part 4](https://nbviewer.org/github/alemezio/Ecommerce_Brazil_project/blob/main/Part4_Error_Structure_and_Promise_Windows.ipynb)
 
 ### 1. Exploratory Analysis and Cleaning ([`Part1_Olist_Exploratory_Analysis.ipynb`](Part1_Olist_Exploratory_Analysis.ipynb))
 
@@ -80,6 +80,19 @@ The Part 2 protocol splits randomly, letting the model "see the future" of the p
 
 The two findings: **the headline is not inflated by the random split** (the final window is actually easier: deliveries in mid-2018 are faster and less dispersed, which is why even the constant median improves there), but **random-split CV hides the real uncertainty structure**: forward error varies by period from 3.7 to 6.7 days (fold std ≈ 1.2), roughly 25 times the ± 0.045 fold noise random CV reports. The honest deployment claim is forward MAE ≈ 4.8 ± 1.2 days across periods, not 4.43 ± 0.05.
 
+### 4. Error structure and promise windows ([`Part4_Error_Structure_and_Promise_Windows.ipynb`](Part4_Error_Structure_and_Promise_Windows.ipynb))
+
+Is MAE the right lens? Part 4 measures how the error scales with the target and reframes the model as what the business actually ships: a **promise date**. Findings: the error is U-shaped (relative error peaks at both extremes, ×2.1 for 0-2-day and ×3.5 for 40+-day deliveries, with ×1.31 across the 6-20-day mid-range holding 68% of orders); re-training on a log target is a clean negative result (~1% relative gain on short deliveries for +0.002 days of MAE), so the short-delivery weakness is an information limit, not a loss-function artifact. The payoff is the **P90 quantile model**:
+
+| Promise | Coverage | Mean padding |
+|---|---|---|
+| P90 model (random test) | 90.0% | **7.6 days** |
+| Platform estimator (random test) | 93.5% | 11.5 days |
+| P90 model (temporal test) | **97.8%** | **11.5 days** |
+| Platform estimator (temporal test) | 96.3% | 13.1 days |
+
+On the random test the model delivers calibrated 90% promises about 4 days tighter than the platform's; on genuinely future orders it beats the platform on coverage and padding simultaneously. The observed drift (97.8% vs the 90% target) shows promise quantiles inherit period difficulty and need a recalibration cadence in deployment.
+
 ### Evaluation notes
 
 - **Leakage discipline:** `review_score` exists in the dataset but is deliberately excluded from the features: reviews are written after delivery, so including it would leak the outcome into the prediction.
@@ -92,6 +105,7 @@ The two findings: **the headline is not inflated by the random split** (the fina
 | `Part1_Olist_Exploratory_Analysis.ipynb` | EDA, cleaning, table joins and feature engineering. |
 | `Part2_Olist_Machine_Learning.ipynb` | Pipelines, training, model comparison and selection. |
 | `Part3_Temporal_Evaluation.ipynb` | Temporal (train-on-past) and seller-grouped evaluations. |
+| `Part4_Error_Structure_and_Promise_Windows.ipynb` | Metric analysis (error vs target scale) and P90 promise-date model. |
 | `src/olist_delivery/` | The pipeline as a package: single source of truth plus `train` and `predict` CLIs. |
 | `tests/` | Smoke tests pinning `src/` to the notebook checkpoints; they run on the committed sample. |
 | `data/sample/` | Committed 2000-row sample so tests run on a fresh clone. |
@@ -146,8 +160,11 @@ The predict CLI validates the input columns and warns explicitly when categorica
 
 ## 🔮 Future work
 
-- **Incorporate reviews:** analyze the relation between ratings and delivery times to build a seller "score".
-- **Narrow the temporal range:** train only with 2018 data, when the sales volume was higher and more stable.
+- **Promise-quantile calibration** (opened by Part 4): rolling or conformal recalibration of the P90 promise, plus a coverage-vs-padding sweep over the quantile level.
+- **Seller history features:** a seller "score" from past dispatch delays and review ratings, built with past-only rolling windows so it stays leakage-free under the temporal protocol.
+- **Re-tune under the temporal protocol:** hyperparameters were searched under random CV only; a temporal-split search is the fair next optimization.
+- **Road distance (OSRM)** instead of geodesic distance, better suited to Brazil's geography.
+- **Include undelivered orders** via a survival-analysis framing (currently the model predicts delivery time given delivery happens).
 
 ## 📄 Data and licenses
 
