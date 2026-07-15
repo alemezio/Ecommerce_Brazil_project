@@ -65,6 +65,8 @@ All baseline numbers are reproducible with [`scripts/baseline_check.py`](scripts
 | SVM Regressor (LinearSVR) | 4.633 ± 0.041 | 7.344 |
 | SGD Regressor | 4.633 ± 0.041 | 7.344 |
 
+Why nine models: the list is an ablation over hypothesis classes, and it decomposes the total gain over the constant floor (5.635 → 4.430, 1.20 days of MAE) into **linear signal** (0.81, OLS), **loss alignment** (0.19: LinearSVR/SGD are still linear models, and their entire edge over OLS comes from training under an MAE-like loss), and **boosted non-linear structure** (0.20, XGBoost). About half of the boosted model's win over plain linear regression is simply optimizing the right loss.
+
 How to read the uncertainty: XGBoost's MAE lead over Random Forest (0.22 days) is roughly 5 times its fold-to-fold std (0.045 days), so the ranking is stable. The differences within the linear family (4.824 vs 4.823) sit far inside fold noise: those are ties. Random Forest wins RMSE, but **XGBoost** was selected by MAE, the metric declared before the comparison. The model was then interpreted through feature importance and per-feature performance analysis (SHAP).
 
 ### 3. Temporal evaluation ([`Part3_Temporal_Evaluation.ipynb`](Part3_Temporal_Evaluation.ipynb))
