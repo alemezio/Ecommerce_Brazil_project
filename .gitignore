@@ -4,6 +4,7 @@ data/processed/*.csv
 
 # Personal notes
 *_study_notes.md
+*_study_notes.pdf
 notas_*.md
 
 # Python / Jupyter artifacts

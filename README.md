@@ -162,7 +162,7 @@ The predict CLI validates the input columns and warns explicitly when categorica
 
 ## 🔮 Future work
 
-- **Promise-quantile calibration** (opened by Part 4): rolling or conformal recalibration of the P90 promise, plus a coverage-vs-padding sweep over the quantile level.
+- **Promise-quantile calibration** (opened by Part 4): the P90 model over-covers on future data (97.8% against a 90% target), so a deployed version needs recalibration: rolling refits on a trailing window, and/or a conformal correction estimated on held-out data. Cheapest first step: sweep the quantile level and plot realized coverage against padding on the temporal test.
 - **Seller history features:** a seller "score" from past dispatch delays and review ratings, built with past-only rolling windows so it stays leakage-free under the temporal protocol.
 - **Re-tune under the temporal protocol:** hyperparameters were searched under random CV only; a temporal-split search is the fair next optimization.
 - **Road distance (OSRM)** instead of geodesic distance, better suited to Brazil's geography.
